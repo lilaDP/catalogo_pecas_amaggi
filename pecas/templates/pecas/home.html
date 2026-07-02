@@ -1,0 +1,316 @@
+{% extends 'pecas/base.html' %}
+
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F5F5F5; color: #333333; margin-top: 0 !important; padding-top: 0 !important; }
+    .bg-amaggi-green { background-color: #00A859; }
+    .text-amaggi-green { color: #00A859; }
+    .bg-amaggi-yellow { background-color: #F4C430; }
+    .border-amaggi-green { border-color: #00A859; }
+</style>
+
+<section class="relative bg-zinc-900 overflow-hidden py-16 sm:py-24">
+    <div class="absolute inset-0 z-0 opacity-40 mix-blend-multiply filter brightness-50">
+        <img src="https://images.unsplash.com/photo-1594913785162-e6785b423cb1?auto=format&fit=crop&q=80&w=1920" 
+             alt="Maquinários Agrícolas" class="w-full h-full object-cover">
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-r from-[#00331b]/90 to-transparent z-0"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 text-left">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight max-w-2xl uppercase">
+            Catálogo Oficial de Peças <span class="text-amaggi-yellow">AMAGGI</span>
+        </h1>
+        <p class="mt-4 text-base sm:text-lg text-gray-300 max-w-xl font-light">
+            Consulta inteligente, gestão de estoque em tempo real e alta performance para caminhões, carretas e frotas pesadas.
+        </p>
+        <div class="mt-8">
+            <a href="#catalogo" class="bg-amaggi-green hover:bg-[#008747] text-white px-8 py-3.5 rounded-lg font-bold text-sm tracking-wider uppercase transition-all shadow-lg inline-flex items-center gap-2 hover:scale-105 transform">
+                <span>Explorar Peças</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<main id="catalogo" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="flex flex-col lg:flex-row gap-8">
+        
+        <!-- BARRA LATERAL DE FILTROS -->
+        <aside class="w-full lg:w-64 flex-shrink-0 bg-white p-6 rounded-xl shadow-sm border border-gray-200 self-start">
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+                <h2 class="text-base font-bold text-gray-800 tracking-wide uppercase flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-amaggi-green"></i> Filtros
+                </h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Categoria Padronizada -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Categoria</label>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green">
+                            <input type="checkbox" name="categoria" value="mecanicos" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> Componentes Mecânicos
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green">
+                            <input type="checkbox" name="categoria" value="quimicos_paintura" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> Químicos e Pintura
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green">
+                            <input type="checkbox" name="categoria" value="fluidos_lubrificantes" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> Fluidos e Lubrificantes
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green">
+                            <input type="checkbox" name="categoria" value="uniformes_epis" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> Uniformes e EPIs
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green">
+                            <input type="checkbox" name="categoria" value="pneu_novo" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> Pneu Novo
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green">
+                            <input type="checkbox" name="categoria" value="pneu_recapado" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> Pneu Recapado
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Depósito Padronizado -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Depósito</label>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green uppercase font-mono text-xs">
+                            <input type="checkbox" name="deposito" value="pc01" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> pc01
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green uppercase font-mono text-xs">
+                            <input type="checkbox" name="deposito" value="pc02" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> pc02
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green uppercase font-mono text-xs">
+                            <input type="checkbox" name="deposito" value="tint" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> tint
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green uppercase font-mono text-xs">
+                            <input type="checkbox" name="deposito" value="lb01" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> lb01
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green uppercase font-mono text-xs">
+                            <input type="checkbox" name="deposito" value="temp" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> temp
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green uppercase font-mono text-xs">
+                            <input type="checkbox" name="deposito" value="ep01" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> ep01
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green uppercase font-mono text-xs">
+                            <input type="checkbox" name="deposito" value="un01" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> un01
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green uppercase font-mono text-xs">
+                            <input type="checkbox" name="deposito" value="pne1" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> pne1
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amaggi-green uppercase font-mono text-xs">
+                            <input type="checkbox" name="deposito" value="pne2" class="filter-checkbox rounded border-gray-300 text-[#00A859] focus:ring-[#00A859]"> pne2
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Status do Estoque</label>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-emerald-600">
+                            <input type="checkbox" name="estoque" value="em_estoque" class="filter-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"> Em estoque
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-amber-500">
+                            <input type="checkbox" name="estoque" value="baixo_estoque" class="filter-checkbox rounded border-gray-300 text-amber-500 focus:ring-amber-500"> Estoque Baixo
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer hover:text-red-500">
+                            <input type="checkbox" name="estoque" value="sem_estoque" class="filter-checkbox rounded border-gray-300 text-red-500 focus:ring-red-500"> Sem Estoque
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- SEÇÃO DOS PRODUTOS -->
+        <div class="flex-1">
+            <div class="flex items-center justify-between mb-6">
+                <p class="text-sm text-gray-500 font-medium">
+                    Mostrando <span id="contador-pecas" class="text-gray-800 font-bold">{{ pecas|length }}</span> peças filtradas
+                </p>
+                <div class="text-sm text-gray-500 hidden sm:block">
+                    Organização: <span class="text-gray-800 font-semibold">Código Crescente</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" id="grid-produtos">
+                {% for peca in pecas %}
+                <div class="card-peca-item group bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                     data-codigo="{{ peca.codigo|lower }}"
+                     data-descricao="{{ peca.descricao|lower }}"
+                     data-categoria="{% firstof peca.categoria "mecanicos" %}"
+                     data-deposito="{% firstof peca.deposito "un01"|lower %}" 
+                     data-quantidade="{{ peca.quantidade }}"
+                     data-estoque-minimo="5"
+                     data-locacao="{{ peca.locacao|default:''|lower }}">
+                    
+                    <div>
+                        <div class="relative bg-gray-50 aspect-video w-full overflow-hidden border-b border-gray-100">
+                            {% if peca.imagem %}
+                                <img src="{{ peca.imagem.url }}" alt="{{ peca.descricao }}"
+                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            {% else %}
+                                <div class="w-full h-full flex flex-col items-center justify-center text-gray-400">
+                                    <i class="fa-solid fa-gears text-3xl mb-2"></i>
+                                    <span class="text-xs">Sem imagem disponível</span>
+                                </div>
+                            {% endif %}
+                            
+                            <span class="absolute top-3 left-3 bg-zinc-900/80 backdrop-blur-xs text-white text-xs font-mono font-bold px-2.5 py-1 rounded">
+                                PÓS-COD: {{ peca.codigo }}
+                            </span>
+
+                            <span class="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full shadow-xs
+                                {% if peca.quantidade == 0 %}
+                                    bg-red-100 text-red-800
+                                {% elif peca.quantidade <= 5 %}
+                                    bg-amber-100 text-amber-800
+                                {% else %}
+                                    bg-emerald-100 text-emerald-800
+                                {% endif %}">
+                                <i class="fa-solid fa-circle text-[8px] mr-1"></i>
+                                {% if peca.quantidade == 0 %}Sem Estoque{% elif peca.quantidade <= 5 %}Estoque Baixo{% else %}Em Estoque{% endif %}
+                            </span>
+                        </div>
+
+                        <div class="p-5">
+                            <span class="text-[10px] font-extrabold tracking-widest text-amaggi-green uppercase">
+                                {{ peca.get_categoria_display|default:"Componentes Mecânicos" }}
+                            </span>
+                            <h3 class="text-base font-bold text-gray-800 mt-1 line-clamp-2 min-h-[3rem] group-hover:text-amaggi-green transition-colors">
+                                {{ peca.descricao }}
+                            </h3>
+                            
+                            <p class="text-xs text-gray-500 mt-2 line-clamp-2 min-h-[2rem]">
+                                {{ peca.finalidade|default:"Nenhuma descrição técnica adicional cadastrada." }}
+                            </p>
+
+                            <div class="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                    <span class="text-gray-400 block">Qtd disponível</span>
+                                    <strong class="text-gray-700 font-bold text-sm">{{ peca.quantidade }} un</strong>
+                                </div>
+                                <div>
+                                    <span class="text-gray-400 block">Almoxarifado</span>
+                                    <strong class="text-gray-700 font-bold text-sm uppercase font-mono block">{{ peca.get_deposito_display|default:peca.deposito }}</strong>
+                                </div>
+                                <div class="col-span-2 mt-1 bg-slate-50 p-2 rounded-md flex items-center gap-1.5 border border-slate-100">
+                                    <i class="fa-solid fa-map-pin text-purple-500 text-[10px]"></i>
+                                    <span class="text-gray-400">Locação:</span>
+                                    <strong class="text-gray-700 font-semibold truncate">{{ peca.locacao|default:"Não mapeada" }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-5 pt-0">
+                        <a href="/peca/{{ peca.id }}/"
+                           class="w-full bg-gray-100 hover:bg-amaggi-green text-gray-700 hover:text-white text-center py-2.5 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 block shadow-2xs">
+                            Ver Detalhes <i class="fa-solid fa-circle-info ml-1"></i>
+                        </a>
+                    </div>
+
+                </div>
+                {% endfor %}
+                
+                <div id="no-results-alert" class="hidden col-span-full bg-white p-12 rounded-xl text-center border border-dashed border-gray-300">
+                    <i class="fa-solid fa-box-open text-5xl text-gray-300 mb-4"></i>
+                    <h3 class="text-lg font-bold text-gray-700">Nenhuma peça corresponde aos filtros</h3>
+                    <p class="text-sm text-gray-400 mt-1">Tente desmarcar algumas opções para expandir a busca.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<footer class="bg-zinc-900 text-gray-400 py-6 text-center text-xs mt-20 border-t-4 border-amaggi-green">
+    <div class="max-w-7xl mx-auto px-4">
+        <p>© 2026 AMAGGI - Sistema Interno Corporativo de Almoxarifado. Todos os direitos reservados.</p>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const checkboxes = document.querySelectorAll('.filter-checkbox');
+        const searchInput = document.getElementById('search-input') || document.querySelector('input[name="q"]');
+        const items = document.querySelectorAll('.card-peca-item');
+        const contador = document.getElementById('contador-pecas');
+        const noResultsAlert = document.getElementById('no-results-alert');
+
+        function aplicarFiltros() {
+            const categoriasSelecionadas = Array.from(document.querySelectorAll('input[name="categoria"]:checked')).map(el => el.value.trim());
+            const depositosSelecionados = Array.from(document.querySelectorAll('input[name="deposito"]:checked')).map(el => el.value.trim().toLowerCase());
+            const estoqueSelecionado = Array.from(document.querySelectorAll('input[name="estoque"]:checked')).map(el => el.value.trim());
+            const termoPesquisa = searchInput ? searchInput.value.toLowerCase().trim() : "";
+
+            let totalVisiveis = 0;
+
+            items.forEach(item => {
+                const itemCategoria = item.getAttribute('data-categoria') ? item.getAttribute('data-categoria').trim() : "";
+                const itemDeposito = item.getAttribute('data-deposito') ? item.getAttribute('data-deposito').trim().toLowerCase() : "";
+                const itemQtd = parseInt(item.getAttribute('data-quantidade'), 10);
+                const itemMinimo = parseInt(item.getAttribute('data-estoque-minimo'), 10) || 5;
+                const itemCodigo = item.getAttribute('data-codigo') ? item.getAttribute('data-codigo').trim() : "";
+                const itemDescricao = item.getAttribute('data-descricao') ? item.getAttribute('data-descricao').trim() : "";
+                const itemLocacao = item.getAttribute('data-locacao') ? item.getAttribute('data-locacao').trim() : "";
+
+                const atendeCategoria = categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(itemCategoria);
+                const atendeDeposito = depositosSelecionados.length === 0 || depositosSelecionados.includes(itemDeposito);
+
+                let atendeEstoque = false;
+                if (estoqueSelecionado.length === 0) {
+                    atendeEstoque = true;
+                } else {
+                    if (estoqueSelecionado.includes('em_estoque') && itemQtd > itemMinimo) atendeEstoque = true;
+                    if (estoqueSelecionado.includes('baixo_estoque') && itemQtd > 0 && itemQtd <= itemMinimo) atendeEstoque = true;
+                    if (estoqueSelecionado.includes('sem_estoque') && itemQtd === 0) atendeEstoque = true;
+                }
+
+                const atendePesquisa = termoPesquisa === "" || 
+                                       itemCodigo.includes(termoPesquisa) || 
+                                       itemDescricao.includes(termoPesquisa) ||
+                                       itemLocacao.includes(termoPesquisa); 
+
+                if (atendeCategoria && atendeDeposito && atendeEstoque && atendePesquisa) {
+                    item.classList.remove('hidden');
+                    item.classList.add('item-visivel');
+                    totalVisiveis++;
+                } else {
+                    item.classList.add('hidden');
+                    item.classList.remove('item-visivel');
+                }
+            });
+
+            contador.textContent = totalVisiveis;
+
+            if (totalVisiveis === 0) {
+                noResultsAlert.classList.remove('hidden');
+            } else {
+                noResultsAlert.classList.add('hidden');
+            }
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', aplicarFiltros);
+            searchInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const primeiroItemVisivel = document.querySelector('.card-peca-item.item-visivel');
+                    if (primeiroItemVisivel) {
+                        const linkDetalhes = primeiroItemVisivel.querySelector('a[href^="/peca/"]');
+                        if (linkDetalhes) {
+                            window.location.href = linkDetalhes.href;
+                        }
+                    }
+                }
+            });
+        }
+
+        checkboxes.forEach(cb => cb.addEventListener('change', aplicarFiltros));
+        aplicarFiltros();
+    });
+</script>
+{% endblock %}

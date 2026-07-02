@@ -1,0 +1,150 @@
+body {
+    margin: 0;
+    background: #f4f4f4;
+    font-family: Arial, sans-serif;
+}
+
+/* As propriedades da antiga .navbar vermelha foram removidas */
+
+.hero {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.logo-principal {
+    width: 250px;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    color: #1e4f9c;
+    font-size: 45px;
+}
+
+.search-box {
+    width: 90%;
+    max-width: 700px;
+    margin: 30px auto;
+    display: flex;
+    gap: 10px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+}
+
+.search-box button {
+    background: #1e4f9c;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.grid-catalogo {
+    width: 95%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    padding-bottom: 40px;
+}
+
+.card-peca {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.card-peca:hover {
+    transform: translateY(-8px);
+}
+
+.imagem-peca {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    background: white;
+}
+
+.conteudo-card {
+    padding: 20px;
+}
+
+.codigo {
+    background: #1e4f9c;
+    color: white;
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.estoque {
+    background: #dff4e3;
+    color: #0b6b2d;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 15px 0;
+    font-weight: bold;
+}
+
+.btn-detalhes {
+    display: block;
+    text-align: center;
+    background: #961d22;
+    color: white;
+    text-decoration: none;
+    padding: 14px;
+    border-radius: 12px;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.cadastro-box {
+    width: 90%;
+    max-width: 700px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.cadastro-box input,
+.cadastro-box textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.cadastro-box button {
+    background: #1e4f9c;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+@media(max-width: 768px) {
+    .hero h1 {
+        font-size: 32px;
+    }
+    .logo-principal {
+        width: 180px;
+    }
+}

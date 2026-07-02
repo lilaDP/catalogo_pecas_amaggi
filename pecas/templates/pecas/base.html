@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo AMAGGI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; margin: 0; padding: 0; }
+    </style>
+</head>
+<body>
+
+    <header class="relative z-50 bg-white border-b border-slate-100 m-0 p-0 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            
+            <div class="flex-shrink-0 flex items-center py-2">
+                <a href="/" class="block">
+                    <img src="https://static.vagas.com.br/portais-de-carreira/images/components/box_divisions/original/box-vagas-logo-amaggi?1588103090" 
+                         alt="AMAGGI" class="h-16 w-auto object-contain">
+                </a>
+            </div>
+
+            <div class="hidden md:flex flex-1 max-w-2xl relative">
+                <form action="/" method="GET" class="w-full relative" onsubmit="return false;">
+                    <input type="text" 
+                           id="search-input"
+                           name="q"
+                           value="{{ request.GET.q|default:'' }}"
+                           placeholder="Buscar por código, nome, categoria ou locação (prateleira)..." 
+                           class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 focus:bg-white transition-all">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+                    </div>
+                </form>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="/admin/" class="hidden sm:flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-emerald-600 transition-colors">
+                    <i class="fa-solid fa-gauge-high text-lg"></i>
+                    <span>Painel Admin</span>
+                </a>
+                <div class="h-6 w-[1px] bg-slate-200 hidden sm:block"></div>
+                <button class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-50 text-slate-600">
+                    <i class="fa-regular fa-user text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div>
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

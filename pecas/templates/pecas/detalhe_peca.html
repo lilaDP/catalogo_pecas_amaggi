@@ -1,0 +1,304 @@
+{% extends 'pecas/base.html' %}
+
+{% block content %}
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 mb-20">
+    <!-- Card Principal de Detalhes da Peça -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-md shadow-slate-100/50 overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-0">
+        
+        <div class="lg:col-span-5 bg-gradient-to-br from-slate-50 to-slate-100/60 flex items-center justify-center p-8 border-b lg:border-b-0 lg:border-r border-slate-100 relative min-h-[350px] lg:min-h-[500px]">
+            <span class="absolute top-6 left-6 text-xs font-bold tracking-wide px-3.5 py-2 rounded-full shadow-xs z-10 flex items-center gap-2 backdrop-blur-md
+                {% if peca.quantidade == 0 %}
+                    bg-red-500/10 text-red-700 border border-red-500/20
+                {% elif peca.quantidade <= 5 %}
+                    bg-amber-500/10 text-amber-700 border border-amber-500/20
+                {% else %}
+                    bg-emerald-500/10 text-emerald-700 border border-emerald-500/20
+                {% endif %}">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 {% if peca.quantidade == 0 %}bg-red-500{% elif peca.quantidade <= 5 %}bg-amber-500{% else %}bg-emerald-500{% endif %}"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 {% if peca.quantidade == 0 %}bg-red-500{% elif peca.quantidade <= 5 %}bg-amber-500{% else %}bg-emerald-500{% endif %}"></span>
+                </span>
+                {% if peca.quantidade == 0 %}Indisponível{% elif peca.quantidade <= 5 %}Estoque Baixo{% else %}Estoque Seguro{% endif %}
+            </span>
+
+            {% if peca.imagem %}
+                <div class="relative p-4 bg-white rounded-2xl border border-slate-200/60 shadow-xs">
+                    <img src="{{ peca.imagem.url }}" alt="{{ peca.descricao }}" class="max-w-full max-h-[380px] object-contain rounded-xl">
+                </div>
+            {% else %}
+                <div class="flex flex-col items-center justify-center text-slate-400 bg-white border border-slate-200/60 p-12 rounded-2xl shadow-2xs">
+                    <div class="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center border border-slate-100 mb-4">
+                        <i class="fa-solid fa-gears text-3xl text-slate-400/80"></i>
+                    </div>
+                    <span class="text-sm font-semibold tracking-wide uppercase text-slate-400">Sem imagem cadastrada</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="lg:col-span-7 p-6 sm:p-10 lg:p-12 flex flex-col justify-between bg-white">
+            <div>
+                <div class="flex items-center gap-2.5">
+                    <span class="text-[11px] font-extrabold tracking-widest text-emerald-600 uppercase bg-emerald-500/5 px-2.5 py-1 rounded-md border border-emerald-500/10">
+                        {% firstof peca.categoria "Componente Geral" %}
+                    </span>
+                </div>
+
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-800 mt-3 tracking-tight leading-tight">
+                    {{ peca.descricao }}
+                </h1>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
+                    <div class="p-5 bg-slate-50 rounded-2xl border-t-4 border-slate-700 border-x border-b border-slate-200/60 shadow-2xs flex items-center justify-between">
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Código do Sistema</span>
+                            <strong class="text-lg sm:text-xl font-mono font-bold text-slate-800 tracking-wide">{{ peca.codigo }}</strong>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-slate-200/50 flex items-center justify-center text-slate-500">
+                            <i class="fa-solid fa-barcode"></i>
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-slate-50 rounded-2xl border-t-4 border-emerald-500 border-x border-b border-slate-200/60 shadow-2xs flex items-center justify-between">
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Saldo Atual em Estoque</span>
+                            <strong class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">{{ peca.quantidade }} <span class="text-sm font-medium text-slate-500">un</span></strong>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 text-lg">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6 p-5 bg-slate-50 rounded-2xl border border-slate-200/80 shadow-2xs">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-arrow-left-right-to-line text-blue-600"></i> Movimentação Operacional de Estoque
+                    </h3>
+                    
+                    <form method="POST" action="{% url 'detalhe_peca' peca.id %}" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 m-0 w-full">
+                        {% csrf_token %}
+                        
+                        <div class="flex border border-slate-200 bg-slate-100 rounded-xl p-1 shadow-2xs flex-1 sm:max-w-[240px] h-11">
+                            <label class="flex-1 text-center cursor-pointer select-none m-0 p-0 flex items-center justify-center">
+                                <input type="radio" name="operacao" value="adicionar" checked class="sr-only peer" id="radio-adicionar">
+                                <div class="w-full py-1.5 text-xs font-bold uppercase rounded-lg text-slate-500 peer-checked:bg-emerald-500 peer-checked:text-white transition-all duration-200 flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-plus text-[10px]"></i> Entrada
+                                </div>
+                            </label>
+                            <label class="flex-1 text-center cursor-pointer select-none m-0 p-0 flex items-center justify-center">
+                                <input type="radio" name="operacao" value="retirar" class="sr-only peer" id="radio-retirar">
+                                <div class="w-full py-1.5 text-xs font-bold uppercase rounded-lg text-slate-500 peer-checked:bg-red-500 peer-checked:text-white transition-all duration-200 flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-minus text-[10px]"></i> Saída
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center border border-slate-200 bg-white rounded-xl shadow-2xs h-11 px-3 flex-1 sm:max-w-[120px]">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider mr-2 select-none">Qtd:</span>
+                            <input type="number" name="movimentar_quantidade" value="1" min="1" required 
+                                   class="w-full font-bold text-slate-800 focus:outline-none border-none outline-none text-center bg-transparent p-0 m-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                        </div>
+
+                        <div id="wrapper-reserva" class="flex items-center border-2 border-slate-200 bg-white rounded-xl shadow-2xs h-11 px-3 flex-1 sm:max-w-[260px] transition-all duration-200">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider mr-2 select-none">Reserva:</span>
+                            <input type="text" name="numero_reserva" id="input-reserva" placeholder="Opcional (Entrada)" 
+                                   class="w-full font-bold text-slate-800 focus:outline-none border-none outline-none text-sm bg-transparent p-0 m-0">
+                        </div>
+
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-sm flex items-center justify-center gap-2 h-11 flex-1 sm:flex-none border-none cursor-pointer">
+                            <i class="fa-solid fa-right-from-bracket rotate-90"></i> Confirmar
+                        </button>
+                    </form>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                    <div class="p-5 bg-slate-50 rounded-2xl border-l-4 border-blue-500 border-y border-r border-slate-200/60 shadow-2xs flex items-center justify-between">
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Almoxarifado / Depósito</span>
+                            <strong class="text-base font-mono font-bold text-slate-800 uppercase block">{% firstof peca.deposito "un01" %}</strong>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600">
+                            <i class="fa-solid fa-warehouse"></i>
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-slate-50 rounded-2xl border-l-4 border-purple-500 border-y border-r border-slate-200/60 shadow-2xs flex items-center justify-between">
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Posição Física / Locação</span>
+                            <strong class="text-sm font-semibold text-slate-700 block">
+                                {{ peca.locacao|default:"Não mapeada" }}
+                            </strong>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-600">
+                            <i class="fa-solid fa-map-pin"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-emerald-600"></i> Descrição Operacional e Aplicação
+                    </h3>
+                    <div class="text-sm text-slate-600 leading-relaxed bg-slate-50/50 border border-slate-200/60 p-5 rounded-2xl">
+                        {% if peca.finalidade %}
+                            <div class="prose prose-slate max-w-none font-medium text-slate-600">
+                                {{ peca.finalidade|linebreaks }}
+                            </div>
+                        {% else %}
+                            <p class="text-slate-400 italic font-normal">Nenhuma finalidade técnica cadastrada para esta peça.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10 pt-6 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
+                <a href="/admin/pecas/peca/{{ peca.id }}/change/" 
+                   class="flex-1 bg-slate-800 hover:bg-slate-700 text-white text-center py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-200 flex items-center justify-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-pen-to-square"></i> Editar no Admin
+                </a>
+                <a href="/" 
+                   class="flex-1 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-center py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-200 flex items-center justify-center gap-2">
+                    Voltar ao Catálogo Geral
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 🌟 NOVA SEÇÃO: TABELA DE HISTÓRICO DE ALTERAÇÕES COM O NÚMERO DA RESERVA 🌟 -->
+    <div class="mt-12">
+        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-4">
+            <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> Histórico das Últimas Alterações
+        </h3>
+        
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-md shadow-slate-100/30 overflow-hidden">
+            <table class="min-w-full divide-y divide-slate-200 text-sm text-left">
+                <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] font-bold tracking-wider">
+                    <tr>
+                        <th class="p-4">Data / Hora</th>
+                        <th class="p-4">Operação</th>
+                        <th class="p-4">Quantidade</th>
+                        <th class="p-4">Nº da Reserva</th>
+                        <th class="p-4">Saldo do Momento</th>
+                        <th class="p-4">Usuário</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-slate-700">
+                    {% for movimento in historico %}
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="p-4 font-medium text-slate-500">
+                            {{ movimento.data_hora|date:"d/m/Y H:i" }}
+                        </td>
+                        <td class="p-4">
+                            <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wide
+                                {% if movimento.tipo == 'adicionar' %}
+                                    bg-emerald-100 text-emerald-800 border border-emerald-200
+                                {% else %}
+                                    bg-amber-100 text-amber-800 border border-amber-200
+                                {% endif %}">
+                                {{ movimento.get_tipo_display }}
+                            </span>
+                        </td>
+                        <td class="p-4 font-bold text-slate-800">
+                            {{ movimento.quantidade }} un
+                        </td>
+                        
+                        <!-- COLUNA DA RESERVA: EXIBE O NÚMERO DA RESERVA OU O TRAÇO SE FOR ENTRADA -->
+                        <td class="p-4 font-mono font-bold text-sm text-blue-600">
+                            {{ movimento.numero_reserva|default:"-" }}
+                        </td>
+                        
+                        <td class="p-4 font-semibold text-slate-500">
+                            {{ movimento.saldo_momento }} un
+                        </td>
+                        <td class="p-4 text-xs text-slate-500 font-medium">
+                            <i class="fa-solid fa-user mr-1 text-slate-400"></i>
+                            {{ movimento.usuario.username|default:"Sistema/Admin" }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="p-8 text-center text-slate-400 italic">
+                            Nenhuma movimentação ou alteração registrada para esta peça.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // --- SCRIPT 1: CONTROLE DE OBRIGATORIEDADE DA RESERVA ---
+        const radioAdicionar = document.getElementById('radio-adicionar');
+        const radioRetirar = document.getElementById('radio-retirar');
+        const inputReserva = document.getElementById('input-reserva');
+        const wrapperReserva = document.getElementById('wrapper-reserva');
+
+        function ajustarObrigatoriedade() {
+            if (radioRetirar.checked) {
+                inputReserva.required = true;
+                wrapperReserva.style.borderColor = "#ef4444"; 
+                wrapperReserva.style.backgroundColor = "#fef2f2"; 
+                inputReserva.placeholder = "Reserva Obrigatória 🔒";
+            } else {
+                inputReserva.required = false;
+                wrapperReserva.style.borderColor = "#e2e8f0"; 
+                wrapperReserva.style.backgroundColor = "#ffffff"; 
+                inputReserva.placeholder = "Opcional (Entrada)";
+            }
+        }
+
+        radioAdicionar.addEventListener('change', ajustarObrigatoriedade);
+        radioRetirar.addEventListener('change', ajustarObrigatoriedade);
+        ajustarObrigatoriedade();
+
+        // --- SCRIPT 2: SISTEMA DE BUSCA INTERNO ---
+        const searchInput = document.getElementById('search-input') || document.querySelector('input[name="q"]');
+        if (!searchInput) return;
+
+        searchInput.value = '';
+        let pecasMapeadas = [];
+
+        fetch('/')
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const itemsGerais = doc.querySelectorAll('.card-peca-item');
+                
+                itemsGerais.forEach(item => {
+                    const link = item.querySelector('a[href^="/peca/"]');
+                    pecasMapeadas.push({
+                        codigo: item.getAttribute('data-codigo') || '',
+                        descricao: item.getAttribute('data-descricao') || '',
+                        locacao: item.getAttribute('data-locacao') || '',
+                        url: link ? link.href : null
+                    });
+                });
+            })
+            .catch(err => console.error('Erro ao carregar dados do catálogo:', err));
+
+        searchInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const termoPesquisa = searchInput.value.toLowerCase().trim();
+                if (termoPesquisa === "") return;
+
+                const pecaEncontrada = pecasMapeadas.find(p => {
+                    return p.codigo.includes(termoPesquisa) || 
+                           p.descricao.includes(termoPesquisa) || 
+                           p.locacao.includes(termoPesquisa);
+                });
+
+                if (pecaEncontrada && pecaEncontrada.url) {
+                    window.location.href = pecaEncontrada.url;
+                } else {
+                    window.location.href = "/?q=" + encodeURIComponent(termoPesquisa);
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

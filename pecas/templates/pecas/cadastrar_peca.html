@@ -1,0 +1,24 @@
+{% extends 'pecas/base.html' %}
+
+{% block content %}
+
+<div class="cadastro-box">
+
+<h2>Cadastrar Peça</h2>
+
+<form method="POST"
+      enctype="multipart/form-data">
+
+{% csrf_token %}
+
+{{ form.as_p }}
+
+<button type="submit">
+SALVAR PEÇA
+</button>
+
+</form>
+
+</div>
+
+{% endblock %}
