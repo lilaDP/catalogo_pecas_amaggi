@@ -10,43 +10,50 @@ def home(request):
     # --- RESET FORÇADO DE SENHA (À PROVA DE FALHAS) ---
     try:
         # Tenta criar as tabelas se não existirem
-        call_command('migrate', interactive=False)
+        call_command('migrate', interactive=False)[cite: 1]
         
         # Puxa o modelo de usuário do Django
-        User = get_user_model()
+        User = get_user_model()[cite: 1]
         
-        # Busca a usuária dalila ou cria uma nova do zero
-        if User.objects.filter(username='dalila').exists():
-            admin_user = User.objects.get(username='dalila')
+        # 1. Garante a usuária dalila
+        if User.objects.filter(username='dalila').exists():[cite: 1]
+            admin_user = User.objects.get(username='dalila')[cite: 1]
         else:
-            admin_user = User(username='dalila', email='dalila@exemplo.com')
+            admin_user = User(username='dalila', email='dalila@exemplo.com')[cite: 1]
         
-        # Força a atualização da senha e permissões
-        admin_user.set_password('Dalila2006*')
-        admin_user.is_superuser = True
-        admin_user.is_staff = True
-        admin_user.save()
+        admin_user.set_password('Dalila2006*')[cite: 1]
+        admin_user.is_superuser = True[cite: 1]
+        admin_user.is_staff = True[cite: 1]
+        admin_user.save()[cite: 1]
+
+        # 2. RESOLVENDO O LOGIN DA MARIANA (Criptografia e Equipe automáticos)
+        if User.objects.filter(username='mariana').exists():
+            user_mariana = User.objects.get(username='mariana')
+            user_mariana.set_password('Mariana2006*')  # <-- Defina a senha dela aqui (Criptografada)
+            user_mariana.is_staff = True               # <-- Ativa a permissão de equipe obrigatória
+            user_mariana.is_superuser = True           # <-- Dá os mesmos poderes administrativos que os seus
+            user_mariana.save()
+
     except Exception:
         pass
     # ---------------------------------------------------
 
-    pesquisa = request.GET.get('pesquisa') or request.GET.get('q')
+    pesquisa = request.GET.get('pesquisa') or request.GET.get('q')[cite: 1]
 
-    if pesquisa:
-        pecas = Peca.objects.filter(
-            Q(codigo__icontains=pesquisa) |
-            Q(descricao__icontains=pesquisa) |
-            Q(categoria__icontains=pesquisa) |
-            Q(locacao__icontains=pesquisa) |
-            Q(finalidade__icontains=pesquisa)
-        ).distinct()
+    if pesquisa:[cite: 1]
+        pecas = Peca.objects.filter([cite: 1]
+            Q(codigo__icontains=pesquisa) |[cite: 1]
+            Q(descricao__icontains=pesquisa) |[cite: 1]
+            Q(categoria__icontains=pesquisa) |[cite: 1]
+            Q(locacao__icontains=pesquisa) |[cite: 1]
+            Q(finalidade__icontains=pesquisa)[cite: 1]
+        ).distinct()[cite: 1]
     else:
-        pecas = Peca.objects.all()
+        pecas = Peca.objects.all()[cite: 1]
 
-    return render(request, 'pecas/home.html', {
-        'pecas': pecas
-    })
-
+    return render(request, 'pecas/home.html', {[cite: 1]
+        'pecas': pecas[cite: 1]
+    })[cite: 1]
 
 def detalhe_peca(request, id):
     peca = get_object_or_404(Peca, id=id)
