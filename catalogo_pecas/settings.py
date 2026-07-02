@@ -1,4 +1,5 @@
 import os
+import dj_database_url  # <-- Importado para ler a conexão do Neon
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -57,24 +58,20 @@ TEMPLATES = [
 WSGI_APPLICATION = 'catalogo_pecas.wsgi.application'
 
 
-# Database configuration
-# Se estiver rodando no ambiente da Vercel, o banco SQLite é gerado na pasta temporária /tmp
-if 'VERCEL' in os.environ or os.environ.get('SERVER_SOFTWARE', '').startswith('gunicorn'):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': '/tmp/db.sqlite3',
+# Database configuration - Conexão Forçada e Direta com o Neon
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'neondb',
+        'USER': 'neondb_owner',
+        'PASSWORD': 'npg_6ouOEWsCZkr9',
+        'HOST': 'ep-mute-king-ac9zogdc-pooler.sa-east-1.aws.neon.tech',
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require',
         }
     }
-else:
-    # No seu computador local, continua usando o banco de dados padrão do projeto
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/stable/topics/i18n/

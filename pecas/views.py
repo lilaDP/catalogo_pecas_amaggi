@@ -1,15 +1,38 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Q  # Importante para a busca funcionar!
+from django.db.models import Q
+from django.core.management import call_command
+from django.contrib.auth import get_user_model
 from .models import Peca, HistoricoMovimentacao
 
 def home(request):
-    # Captura o termo digitado na barra de pesquisa (aceita 'pesquisa' ou 'q')
+    # --- RESET FORÇADO DE SENHA (À PROVA DE FALHAS) ---
+    try:
+        # Tenta criar as tabelas se não existirem
+        call_command('migrate', interactive=False)
+        
+        # Puxa o modelo de usuário do Django
+        User = get_user_model()
+        
+        # Busca a usuária dalila ou cria uma nova do zero
+        if User.objects.filter(username='dalila').exists():
+            admin_user = User.objects.get(username='dalila')
+        else:
+            admin_user = User(username='dalila', email='dalila@exemplo.com')
+        
+        # Força a atualização da senha e permissões
+        admin_user.set_password('Dalila2006*')
+        admin_user.is_superuser = True
+        admin_user.is_staff = True
+        admin_user.save()
+    except Exception:
+        pass
+    # ---------------------------------------------------
+
     pesquisa = request.GET.get('pesquisa') or request.GET.get('q')
 
     if pesquisa:
-        # Filtra por código, descrição, categoria, locação ou finalidade técnica
         pecas = Peca.objects.filter(
             Q(codigo__icontains=pesquisa) |
             Q(descricao__icontains=pesquisa) |
@@ -26,10 +49,7 @@ def home(request):
 
 
 def detalhe_peca(request, id):
-    # Busca a peça pelo ID correto informado na URL
     peca = get_object_or_404(Peca, id=id)
-    
-    # Captura as últimas 10 movimentações dessa peça para o histórico na tela
     historico = peca.movimentacoes.all()[:10]
     
     if request.method == 'POST':
@@ -46,7 +66,6 @@ def detalhe_peca(request, id):
                 qtd = int(qtd_str)
                 movimentacao_valida = False
                 
-                # Validação do número de reserva para saídas
                 if operacao == 'retirar' and not reserva:
                     messages.error(request, "Erro: Para realizar uma SAÍDA, informe o Número da Reserva!")
                     return redirect('detalhe_peca', id=peca.id)
@@ -66,7 +85,6 @@ def detalhe_peca(request, id):
                     else:
                         messages.error(request, f"Estoque insuficiente! Saldo disponível: {peca.quantidade} un.")
                 
-                # Se a alteração foi válida, salva no histórico
                 if movimentacao_valida:
                     HistoricoMovimentacao.objects.create(
                         peca=peca,
@@ -109,4 +127,3 @@ def cadastrar_peca(request):
         'pecas/cadastrar_peca.html',
         {'form': form}
     )
-# ... (Mantenha as funções detalhe_peca e cadastrar_peca idênticas ao código que você já tinha enviado)

@@ -12,7 +12,8 @@ try:
     
     # Configuração do novo administrador
     USER_ADMIN = 'dalila'
-    PASSWORD_ADMIN = 'adm123'  # <-- Altere aqui para a senha que você preferir!
+    EMAIL_ADMIN = 'dalila@exemplo.com'
+    PASSWORD_ADMIN = ''  # <-- Altere aqui para a senha que você preferir!
     
     User = get_user_model()
     if not User.objects.filter(username=USER_ADMIN).exists():
