@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # <-- ATIVADO PARA CARREGAR O CSS NA VERCEL
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -92,6 +93,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'pecas/static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # <-- ONDE O WHITENOISE VAI COLETAR OS ARQUIVOS
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
