@@ -2,36 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
-from django.contrib.auth import get_user_model
 from .models import Peca, HistoricoMovimentacao
 
 def home(request):
-    # --- GERENCIAMENTO DE EQUIPE SEGURO COM POOLER ---
-    try:
-        User = get_user_model()
-        
-        # 1. Garante o seu acesso principal
-        if not User.objects.filter(username='dalila').exists():
-            User.objects.create_superuser(
-                username='dalila', 
-                email='dalila@exemplo.com', 
-                password='Dalila2006*'
-            )
-        
-        # 2. Corrige e ativa a Mariana se ela já tiver sido criada no painel
-        if User.objects.filter(username='mariana').exists():
-            user_mariana = User.objects.get(username='mariana')
-            # Se ela estiver sem acesso de equipe, nós ativamos aqui
-            if not user_mariana.is_staff or not user_mariana.is_superuser:
-                user_mariana.is_staff = True
-                user_mariana.is_superuser = True
-                user_mariana.set_password('Mariana2006*') # Define a senha padrão dela criptografada
-                user_mariana.save()
-                
-    except Exception:
-        pass
-    # ---------------------------------------------------
-
+    # --- ROTA LIMPA E LEVE (SEM RISCO DE ERRO 500) ---
     pesquisa = request.GET.get('pesquisa') or request.GET.get('q')
 
     if pesquisa:
