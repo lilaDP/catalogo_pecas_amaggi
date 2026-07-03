@@ -58,17 +58,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'catalogo_pecas.wsgi.application'
 
 
-# Database configuration - Conexão Forçada e Direta com o Neon
+# Database configuration - Conexão Direta de Gravação Sem Pooler
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'neondb',
         'USER': 'neondb_owner',
         'PASSWORD': 'npg_6ouOEWsCZkr9',
-        'HOST': 'ep-mute-king-ac9zogdc-pooler.sa-east-1.aws.neon.tech',
+        'HOST': 'ep-mute-king-ac9zogdc.sa-east-1.aws.neon.tech',  # <-- Sem o "-pooler"
         'PORT': '5432',
         'OPTIONS': {
             'sslmode': 'require',
+            'connect_timeout': 15,
         }
     }
 }
