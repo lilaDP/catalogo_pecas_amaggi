@@ -1,37 +1,44 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.db.models import Q
+from django.shortcuts import render, redirect, get_object_or_404[cite: 1]
+from django.contrib.auth.decorators import login_required[cite: 1]
+from django.contrib import messages[cite: 1]
+from django.db.models import Q[cite: 1]
 from django.core.management import call_command
 from django.contrib.auth import get_user_model
-from .models import Peca, HistoricoMovimentacao
+from .models import Peca, HistoricoMovimentacao[cite: 1]
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+# --- GATILHO AUTOMÁTICO: TODO MUNDO QUE VOCÊ CRIAR VIRA EQUIPE NA HORA ---
+@receiver(post_save, sender=get_user_model())
+def garantir_permissao_equipe(sender, instance, created, **kwargs):
+    if created and instance.username != 'dalila':
+        # Garante que o usuário novo consiga logar no /admin/
+        instance.is_staff = True
+        instance.is_superuser = True  # Dá poder total para gerenciar o catálogo
+        instance.save()
 
 def home(request):
-    # --- RESET FORÇADO DE SENHA (À PROVA DE FALHAS) ---
+    # --- RESET FORÇADO DA DALILA E MARIANA ---
     try:
-        # Tenta criar as tabelas se não existirem
         call_command('migrate', interactive=False)[cite: 1]
-        
-        # Puxa o modelo de usuário do Django
         User = get_user_model()[cite: 1]
         
-        # 1. Garante a usuária dalila
+        # Garante seu usuário principal
         if User.objects.filter(username='dalila').exists():[cite: 1]
             admin_user = User.objects.get(username='dalila')[cite: 1]
         else:
             admin_user = User(username='dalila', email='dalila@exemplo.com')[cite: 1]
-        
         admin_user.set_password('Dalila2006*')[cite: 1]
         admin_user.is_superuser = True[cite: 1]
         admin_user.is_staff = True[cite: 1]
         admin_user.save()[cite: 1]
 
-        # 2. RESOLVENDO O LOGIN DA MARIANA (Criptografia e Equipe automáticos)
+        # Força o conserto manual do cadastro antigo da Mariana
         if User.objects.filter(username='mariana').exists():
             user_mariana = User.objects.get(username='mariana')
-            user_mariana.set_password('Mariana2006*')  # <-- Defina a senha dela aqui (Criptografada)
-            user_mariana.is_staff = True               # <-- Ativa a permissão de equipe obrigatória
-            user_mariana.is_superuser = True           # <-- Dá os mesmos poderes administrativos que os seus
+            user_mariana.is_staff = True
+            user_mariana.is_superuser = True
+            user_mariana.set_password('Mariana2006*')  # Forçando essa senha padrão
             user_mariana.save()
 
     except Exception:
@@ -55,82 +62,83 @@ def home(request):
         'pecas': pecas[cite: 1]
     })[cite: 1]
 
-def detalhe_peca(request, id):
-    peca = get_object_or_404(Peca, id=id)
-    historico = peca.movimentacoes.all()[:10]
+
+def detalhe_peca(request, id):[cite: 1]
+    peca = get_object_or_404(Peca, id=id)[cite: 1]
+    historico = peca.movimentacoes.all()[:10][cite: 1]
     
-    if request.method == 'POST':
-        if not request.user.is_authenticated:
-            messages.error(request, "Você precisa estar logado para movimentar o estoque.")
-            return redirect('detalhe_peca', id=peca.id)
+    if request.method == 'POST':[cite: 1]
+        if not request.user.is_authenticated:[cite: 1]
+            messages.error(request, "Você precisa estar logado para movimentar o estoque.")[cite: 1]
+            return redirect('detalhe_peca', id=peca.id)[cite: 1]
 
-        operacao = request.POST.get('operacao')
-        qtd_str = request.POST.get('movimentar_quantidade')
-        reserva = request.POST.get('numero_reserva', '').strip()
+        operacao = request.POST.get('operacao')[cite: 1]
+        qtd_str = request.POST.get('movimentar_quantidade')[cite: 1]
+        reserva = request.POST.get('numero_reserva', '').strip()[cite: 1]
         
-        if operacao and qtd_str:
-            try:
-                qtd = int(qtd_str)
-                movimentacao_valida = False
+        if operacao and qtd_str:[cite: 1]
+            try:[cite: 1]
+                qtd = int(qtd_str)[cite: 1]
+                movimentacao_valida = False[cite: 1]
                 
-                if operacao == 'retirar' and not reserva:
+                if operacao == 'retirar' and not reserva:[cite: 1]
                     messages.error(request, "Erro: Para realizar uma SAÍDA, informe o Número da Reserva!")
-                    return redirect('detalhe_peca', id=peca.id)
+                    return redirect('detalhe_peca', id=peca.id)[cite: 1]
 
-                if operacao == 'adicionar':
-                    peca.quantidade += qtd
-                    peca.save()
-                    movimentacao_valida = True
-                    messages.success(request, f"Entrada de {qtd} un. realizada com sucesso!")
+                if operacao == 'adicionar':[cite: 1]
+                    peca.quantidade += qtd[cite: 1]
+                    peca.save()[cite: 1]
+                    movimentacao_valida = True[cite: 1]
+                    messages.success(request, f"Entrada de {qtd} un. realizada com sucesso!")[cite: 1]
                     
-                elif operacao == 'retirar':
-                    if peca.quantidade >= qtd:
-                        peca.quantidade -= qtd
-                        peca.save()
-                        movimentacao_valida = True
-                        messages.success(request, f"Saída de {qtd} un. realizada com sucesso (Reserva: {reserva})!")
-                    else:
-                        messages.error(request, f"Estoque insuficiente! Saldo disponível: {peca.quantidade} un.")
+                elif operacao == 'retirar':[cite: 1]
+                    if peca.quantidade >= qtd:[cite: 1]
+                        peca.quantidade -= qtd[cite: 1]
+                        peca.save()[cite: 1]
+                        movimentacao_valida = True[cite: 1]
+                        messages.success(request, f"Saída de {qtd} un. realizada com sucesso (Reserva: {reserva})!")[cite: 1]
+                    else:[cite: 1]
+                        messages.error(request, f"Estoque insuficiente! Saldo disponível: {peca.quantidade} un.")[cite: 1]
                 
-                if movimentacao_valida:
-                    HistoricoMovimentacao.objects.create(
-                        peca=peca,
-                        usuario=request.user,
-                        tipo=operacao,
-                        quantidade=qtd,
-                        saldo_momento=peca.quantidade,
-                        numero_reserva=reserva if operacao == 'retirar' else None
-                    )
+                if movimentacao_valida:[cite: 1]
+                    HistoricoMovimentacao.objects.create([cite: 1]
+                        peca=peca,[cite: 1]
+                        usuario=request.user,[cite: 1]
+                        tipo=operacao,[cite: 1]
+                        quantidade=qtd,[cite: 1]
+                        saldo_momento=peca.quantidade,[cite: 1]
+                        numero_reserva=reserva if operacao == 'retirar' else None[cite: 1]
+                    )[cite: 1]
                         
-            except ValueError:
-                messages.error(request, "Quantidade informada inválida.")
+            except ValueError:[cite: 1]
+                messages.error(request, "Quantidade informada inválida.")[cite: 1]
             
-            return redirect('detalhe_peca', id=peca.id)
+            return redirect('detalhe_peca', id=peca.id)[cite: 1]
 
-    return render(request, 'pecas/detalhe_peca.html', {
-        'peca': peca,
-        'historico': historico
-    })
+    return render(request, 'pecas/detalhe_peca.html', {[cite: 1]
+        'peca': peca,[cite: 1]
+        'historico': historico[cite: 1]
+    })[cite: 1]
 
 
-@login_required
-def cadastrar_peca(request):
-    if not request.user.is_staff:
-        return redirect('/')
+@login_required[cite: 1]
+def cadastrar_peca(request):[cite: 1]
+    if not request.user.is_staff:[cite: 1]
+        return redirect('/')[cite: 1]
 
-    from .forms import PecaForm
-    form = PecaForm(
-        request.POST or None,
-        request.FILES or None
-    )
+    from .forms import PecaForm[cite: 1]
+    form = PecaForm([cite: 1]
+        request.POST or None,[cite: 1]
+        request.FILES or None[cite: 1]
+    )[cite: 1]
 
-    if form.is_valid():
-        form.save()
-        messages.success(request, "Peça cadastrada com sucesso!")
-        return redirect('/')
+    if form.is_valid():[cite: 1]
+        form.save()[cite: 1]
+        messages.success(request, "Peça cadastrada com sucesso!")[cite: 1]
+        return redirect('/')[cite: 1]
 
-    return render(
-        request,
-        'pecas/cadastrar_peca.html',
-        {'form': form}
-    )
+    return render([cite: 1]
+        request,[cite: 1]
+        'pecas/cadastrar_peca.html',[cite: 1]
+        {'form': form}[cite: 1]
+    )[cite: 1]
