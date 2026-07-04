@@ -20,6 +20,13 @@ class HistoricoMovimentacaoAdmin(admin.ModelAdmin):
     search_fields = ('peca__codigo', 'peca__descricao', 'usuario__username', 'numero_reserva')
     readonly_fields = ('peca', 'usuario', 'tipo', 'quantidade', 'numero_reserva', 'saldo_momento', 'data_hora')
 
-    def has_add_permission(self, request): return False
-    def has_change_permission(self, request, obj=None): return False
-    def has_delete_permission(self, request, obj=None): return False
+    def has_add_permission(self, request): 
+        return False
+        
+    def has_change_permission(self, request, obj=None): 
+        return False
+        
+    def has_delete_permission(self, request, obj=None): 
+        if request.user.username == 'dalila':
+            return True
+        return False
