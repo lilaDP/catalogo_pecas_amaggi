@@ -37,10 +37,17 @@
 
         <div class="lg:col-span-7 p-6 sm:p-10 lg:p-12 flex flex-col justify-between bg-white">
             <div>
-                <div class="flex items-center gap-2.5">
+                <div class="flex items-center justify-between gap-2.5">
                     <span class="text-[11px] font-extrabold tracking-widest text-emerald-600 uppercase bg-emerald-500/5 px-2.5 py-1 rounded-md border border-emerald-500/10">
                         {% firstof peca.categoria "Componente Geral" %}
                     </span>
+                    
+                    <!-- BOTÃO EDITAR NO ADMIN (De volta ao seu lugar) -->
+                    {% if user.is_staff %}
+                    <a href="{% url 'admin:pecas_peca_change' peca.id %}" target="_blank" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-2xs">
+                        <i class="fa-solid fa-pen-to-square"></i> Editar no Admin
+                    </a>
+                    {% endif %}
                 </div>
 
                 <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-800 mt-3 tracking-tight leading-tight">
@@ -139,7 +146,7 @@
                     </div>
                 </div>
 
-                <div class="space-y-3">
+                <div class="space-y-3 mb-10">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                         <i class="fa-solid fa-layer-group text-emerald-600"></i> Descrição Operacional e Aplicação
                     </h3>
@@ -149,6 +156,58 @@
                         {% else %}
                             Nenhuma descrição operacional cadastrada.
                         {% endif %}
+                    </div>
+                </div>
+
+                <!-- HISTÓRICO DE MOVIMENTAÇÕES (De volta ao seu lugar) -->
+                <div class="space-y-4 pt-6 border-t border-slate-100">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-slate-600"></i> Histórico Recente de Movimentações
+                    </h3>
+                    
+                    <div class="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-2xs">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse m-0">
+                                <thead class="bg-slate-50/70 border-b border-slate-200/60 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                    <tr>
+                                        <th class="py-3 px-4 font-bold">Data/Hora</th>
+                                        <th class="py-3 px-4 font-bold">Tipo</th>
+                                        <th class="py-3 px-4 font-bold text-center">Qtd</th>
+                                        <th class="py-3 px-4 font-bold">Usuário</th>
+                                        <th class="py-3 px-4 font-bold">Reserva</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-xs text-slate-600 divide-y divide-slate-100 font-medium">
+                                    {% for mov in peca.movimentacoes.all|dictsortreversed:"data_movimentacao" %}
+                                    <tr class="hover:bg-slate-50/50 transition-colors">
+                                        <td class="py-3 px-4 whitespace-nowrap text-slate-500 font-mono text-[11px]">{{ mov.data_movimentacao|date:"d/m/Y H:i" }}</td>
+                                        <td class="py-3 px-4 whitespace-nowrap">
+                                            {% if mov.tipo == 'adicionar' %}
+                                                <span class="inline-flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md font-bold text-[10px] uppercase border border-emerald-500/10">
+                                                    <i class="fa-solid fa-circle-plus"></i> Entrada
+                                                </span>
+                                            {% else %}
+                                                <span class="inline-flex items-center gap-1 text-red-700 bg-red-50 px-2 py-0.5 rounded-md font-bold text-[10px] uppercase border border-red-500/10">
+                                                    <i class="fa-solid fa-circle-minus"></i> Saída
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="py-3 px-4 text-center font-bold text-slate-800">
+                                            {{ mov.quantidade }}
+                                        </td>
+                                        <td class="py-3 px-4 text-slate-500 truncate max-w-[120px]">{{ mov.usuario.username|default:"Sistema" }}</td>
+                                        <td class="py-3 px-4 font-mono text-slate-500 truncate max-w-[100px]">{{ mov.numero_reserva|default:"-" }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="py-8 text-center text-slate-400 font-normal italic">
+                                            Nenhuma movimentação registrada para esta peça.
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
