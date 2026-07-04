@@ -3,8 +3,8 @@ from .models import Peca, HistoricoMovimentacao
 
 @admin.register(Peca)
 class PecaAdmin(admin.ModelAdmin):
-    list_display = ('codigo', 'descricao', 'quantidade', 'categoria', 'deposito', 'locacao')
-    list_filter = ('categoria', 'deposito')
+    list_display = ('codigo', 'descricao', 'quantidade', 'unidade_medida', 'categoria', 'deposito', 'locacao')
+    list_filter = ('categoria', 'deposito', 'unidade_medida')
     search_fields = ('codigo', 'descricao', 'locacao')
     
     def get_readonly_fields(self, request, obj=None):

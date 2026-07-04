@@ -22,10 +22,17 @@ OPCOES_CATEGORIA = [
     ('pneu_recapado', 'Pneu Recapado'),
 ]
 
+OPCOES_UNIDADE = [
+    ('unidade', 'Unidade'),
+    ('quilos', 'Quilos'),
+    ('litros', 'Litros'),
+]
+
 class Peca(models.Model):
     codigo = models.CharField(max_length=50, unique=True, verbose_name="Código")
     descricao = models.CharField(max_length=255, verbose_name="Descrição")
     quantidade = models.IntegerField(default=0, verbose_name="Quantidade")
+    unidade_medida = models.CharField(max_length=10, choices=OPCOES_UNIDADE, default='unidade', verbose_name="Unidade de Medida")
     deposito = models.CharField(max_length=10, choices=OPCOES_DEPOSITO, blank=True, null=True, verbose_name="Depósito")
     categoria = models.CharField(max_length=50, choices=OPCOES_CATEGORIA, blank=True, null=True, verbose_name="Categoria")
     locacao = models.CharField(max_length=100, blank=True, null=True, verbose_name="Locação da Peça")
