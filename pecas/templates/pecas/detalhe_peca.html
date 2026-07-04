@@ -61,7 +61,12 @@
                     <div class="p-5 bg-slate-50 rounded-2xl border-t-4 border-emerald-500 border-x border-b border-slate-200/60 shadow-2xs flex items-center justify-between">
                         <div class="space-y-1">
                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Saldo Atual em Estoque</span>
-                            <strong class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">{{ peca.quantidade }} <span class="text-sm font-medium text-slate-500">un</span></strong>
+                            <strong class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">
+                                {{ peca.quantidade }} 
+                                <span class="text-sm font-medium text-slate-500">
+                                    {% if peca.unidade_medida == 'quilos' %}kg{% elif peca.unidade_medida == 'litros' %}L{% else %}un{% endif %}
+                                </span>
+                            </strong>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 text-lg">
                             <i class="fa-solid fa-boxes-stacked"></i>
@@ -98,7 +103,7 @@
                                    class="w-full font-bold text-slate-800 focus:outline-none border-none outline-none text-center bg-transparent p-0 m-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         </div>
 
-                        <div id="wrapper-reserva" class="flex items-center border-2 border-slate-200 bg-white rounded-xl shadow-2xs h-11 px-3 flex-1 sm:max-w-[260px] transition-all duration-200">
+                        <div class="flex items-center border border-slate-200 bg-white rounded-xl shadow-2xs h-11 px-3 flex-1 sm:max-w-[260px] transition-all duration-200">
                             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider mr-2 select-none">Reserva:</span>
                             <input type="text" name="numero_reserva" id="input-reserva" placeholder="Opcional (Entrada)" 
                                    class="w-full font-bold text-slate-800 focus:outline-none border-none outline-none text-sm bg-transparent p-0 m-0">
@@ -140,165 +145,15 @@
                     </h3>
                     <div class="text-sm text-slate-600 leading-relaxed bg-slate-50/50 border border-slate-200/60 p-5 rounded-2xl">
                         {% if peca.finalidade %}
-                            <div class="prose prose-slate max-w-none font-medium text-slate-600">
-                                {{ peca.finalidade|linebreaks }}
-                            </div>
+                            {{ peca.finalidade }}
                         {% else %}
-                            <p class="text-slate-400 italic font-normal">Nenhuma finalidade técnica cadastrada para esta peça.</p>
+                            Nenhuma descrição operacional cadastrada.
                         {% endif %}
                     </div>
                 </div>
+
             </div>
-
-            <div class="mt-10 pt-6 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
-                <a href="/admin/pecas/peca/{{ peca.id }}/change/" 
-                   class="flex-1 bg-slate-800 hover:bg-slate-700 text-white text-center py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-200 flex items-center justify-center gap-2 shadow-sm">
-                    <i class="fa-solid fa-pen-to-square"></i> Editar no Admin
-                </a>
-                <a href="/" 
-                   class="flex-1 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-center py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-200 flex items-center justify-center gap-2">
-                    Voltar ao Catálogo Geral
-                </a>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- 🌟 NOVA SEÇÃO: TABELA DE HISTÓRICO DE ALTERAÇÕES COM O NÚMERO DA RESERVA 🌟 -->
-    <div class="mt-12">
-        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-4">
-            <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> Histórico das Últimas Alterações
-        </h3>
-        
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-md shadow-slate-100/30 overflow-hidden">
-            <table class="min-w-full divide-y divide-slate-200 text-sm text-left">
-                <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] font-bold tracking-wider">
-                    <tr>
-                        <th class="p-4">Data / Hora</th>
-                        <th class="p-4">Operação</th>
-                        <th class="p-4">Quantidade</th>
-                        <th class="p-4">Nº da Reserva</th>
-                        <th class="p-4">Saldo do Momento</th>
-                        <th class="p-4">Usuário</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 text-slate-700">
-                    {% for movimento in historico %}
-                    <tr class="hover:bg-slate-50/80 transition-colors">
-                        <td class="p-4 font-medium text-slate-500">
-                            {{ movimento.data_hora|date:"d/m/Y H:i" }}
-                        </td>
-                        <td class="p-4">
-                            <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wide
-                                {% if movimento.tipo == 'adicionar' %}
-                                    bg-emerald-100 text-emerald-800 border border-emerald-200
-                                {% else %}
-                                    bg-amber-100 text-amber-800 border border-amber-200
-                                {% endif %}">
-                                {{ movimento.get_tipo_display }}
-                            </span>
-                        </td>
-                        <td class="p-4 font-bold text-slate-800">
-                            {{ movimento.quantidade }} un
-                        </td>
-                        
-                        <!-- COLUNA DA RESERVA: EXIBE O NÚMERO DA RESERVA OU O TRAÇO SE FOR ENTRADA -->
-                        <td class="p-4 font-mono font-bold text-sm text-blue-600">
-                            {{ movimento.numero_reserva|default:"-" }}
-                        </td>
-                        
-                        <td class="p-4 font-semibold text-slate-500">
-                            {{ movimento.saldo_momento }} un
-                        </td>
-                        <td class="p-4 text-xs text-slate-500 font-medium">
-                            <i class="fa-solid fa-user mr-1 text-slate-400"></i>
-                            {{ movimento.usuario.username|default:"Sistema/Admin" }}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="6" class="p-8 text-center text-slate-400 italic">
-                            Nenhuma movimentação ou alteração registrada para esta peça.
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
         </div>
     </div>
 </main>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // --- SCRIPT 1: CONTROLE DE OBRIGATORIEDADE DA RESERVA ---
-        const radioAdicionar = document.getElementById('radio-adicionar');
-        const radioRetirar = document.getElementById('radio-retirar');
-        const inputReserva = document.getElementById('input-reserva');
-        const wrapperReserva = document.getElementById('wrapper-reserva');
-
-        function ajustarObrigatoriedade() {
-            if (radioRetirar.checked) {
-                inputReserva.required = true;
-                wrapperReserva.style.borderColor = "#ef4444"; 
-                wrapperReserva.style.backgroundColor = "#fef2f2"; 
-                inputReserva.placeholder = "Reserva Obrigatória 🔒";
-            } else {
-                inputReserva.required = false;
-                wrapperReserva.style.borderColor = "#e2e8f0"; 
-                wrapperReserva.style.backgroundColor = "#ffffff"; 
-                inputReserva.placeholder = "Opcional (Entrada)";
-            }
-        }
-
-        radioAdicionar.addEventListener('change', ajustarObrigatoriedade);
-        radioRetirar.addEventListener('change', ajustarObrigatoriedade);
-        ajustarObrigatoriedade();
-
-        // --- SCRIPT 2: SISTEMA DE BUSCA INTERNO ---
-        const searchInput = document.getElementById('search-input') || document.querySelector('input[name="q"]');
-        if (!searchInput) return;
-
-        searchInput.value = '';
-        let pecasMapeadas = [];
-
-        fetch('/')
-            .then(response => response.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const itemsGerais = doc.querySelectorAll('.card-peca-item');
-                
-                itemsGerais.forEach(item => {
-                    const link = item.querySelector('a[href^="/peca/"]');
-                    pecasMapeadas.push({
-                        codigo: item.getAttribute('data-codigo') || '',
-                        descricao: item.getAttribute('data-descricao') || '',
-                        locacao: item.getAttribute('data-locacao') || '',
-                        url: link ? link.href : null
-                    });
-                });
-            })
-            .catch(err => console.error('Erro ao carregar dados do catálogo:', err));
-
-        searchInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                const termoPesquisa = searchInput.value.toLowerCase().trim();
-                if (termoPesquisa === "") return;
-
-                const pecaEncontrada = pecasMapeadas.find(p => {
-                    return p.codigo.includes(termoPesquisa) || 
-                           p.descricao.includes(termoPesquisa) || 
-                           p.locacao.includes(termoPesquisa);
-                });
-
-                if (pecaEncontrada && pecaEncontrada.url) {
-                    window.location.href = pecaEncontrada.url;
-                } else {
-                    window.location.href = "/?q=" + encodeURIComponent(termoPesquisa);
-                }
-            }
-        });
-    });
-</script>
 {% endblock %}

@@ -190,7 +190,10 @@
                             <div class="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2 text-xs">
                                 <div>
                                     <span class="text-gray-400 block">Qtd disponível</span>
-                                    <strong class="text-gray-700 font-bold text-sm">{{ peca.quantidade }} un</strong>
+                                    <strong class="text-gray-700 font-bold text-sm">
+                                        {{ peca.quantidade }} 
+                                        {% if peca.unidade_medida == 'quilos' %}kg{% elif peca.unidade_medida == 'litros' %}L{% else %}un{% endif %}
+                                    </strong>
                                 </div>
                                 <div>
                                     <span class="text-gray-400 block">Almoxarifado</span>
