@@ -42,7 +42,6 @@
                         {% firstof peca.categoria "Componente Geral" %}
                     </span>
                     
-                    <!-- BOTÃO EDITAR NO ADMIN (De volta ao seu lugar) -->
                     {% if user.is_staff %}
                     <a href="{% url 'admin:pecas_peca_change' peca.id %}" target="_blank" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-2xs">
                         <i class="fa-solid fa-pen-to-square"></i> Editar no Admin
@@ -159,7 +158,7 @@
                     </div>
                 </div>
 
-                <!-- HISTÓRICO DE MOVIMENTAÇÕES (De volta ao seu lugar) -->
+                <!-- Histórico Original -->
                 <div class="space-y-4 pt-6 border-t border-slate-100">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                         <i class="fa-solid fa-clock-rotate-left text-slate-600"></i> Histórico Recente de Movimentações
