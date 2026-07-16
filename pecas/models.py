@@ -36,7 +36,8 @@ class Peca(models.Model):
     deposito = models.CharField(max_length=10, choices=OPCOES_DEPOSITO, blank=True, null=True, verbose_name="Depósito")
     categoria = models.CharField(max_length=50, choices=OPCOES_CATEGORIA, blank=True, null=True, verbose_name="Categoria")
     locacao = models.CharField(max_length=100, blank=True, null=True, verbose_name="Locação da Peça")
-    imagem = models.ImageField(upload_to='pecas/', blank=True, null=True, verbose_name="Imagem da Peça")
+    # ALTERADO: De ImageField para URLField para aceitar links da internet
+    imagem = models.URLField(max_length=500, blank=True, null=True, verbose_name="Link da Imagem da Peça")
     finalidade = models.TextField(blank=True, null=True, verbose_name="Descrição Operacional e Aplicação")
 
     class Meta:

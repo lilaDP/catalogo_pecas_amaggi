@@ -43,7 +43,9 @@ class PecaForm(forms.ModelForm):
                 'placeholder': 'Insira as especificações ou aplicações técnicas da peça...'
             }),
 
-            'imagem': forms.ClearableFileInput(attrs={
-                'class': 'w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 file:cursor-pointer'
+            # ALTERADO: De ClearableFileInput para URLInput para receber links da internet no cadastro do site
+            'imagem': forms.URLInput(attrs={
+                'class': 'w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 focus:bg-white transition-all',
+                'placeholder': 'Ex: https://exemplo.com/imagem-da-peca.jpg'
             }),
         }
