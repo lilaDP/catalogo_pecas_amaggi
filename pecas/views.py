@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
+from django.utils import timezone  # IMPORTADO: Para capturar a data atual do servidor
 from .models import Peca, HistoricoMovimentacao
 
 def home(request):
@@ -26,7 +27,13 @@ def home(request):
 
 def detalhe_peca(request, id):
     peca = get_object_or_404(Peca, id=id)
-    historico = peca.movimentacoes.all()[:10]
+    
+    # FILTRO DIÁRIO: Pega apenas a data de hoje (ano-mês-dia) desconsiderando as horas
+    hoje = timezone.localdate()
+    
+    # Filtra as movimentações da peça realizadas HOJE, ordenando das mais recentes para as mais antigas
+    # (Substitua 'data_hora' pelo nome do campo de data do seu model HistoricoMovimentacao se for diferente)
+    historico = peca.movimentacoes.filter(data_hora__date=hoje).order_by('-data_hora')
     
     if request.method == 'POST':
         if not request.user.is_authenticated:
@@ -103,4 +110,3 @@ def cadastrar_peca(request):
         'pecas/cadastrar_peca.html',
         {'form': form}
     )
-
